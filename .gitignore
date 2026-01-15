@@ -1,0 +1,36 @@
+# ISAC Deep Learning - Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch checkpoints (keep only best models)
+*.pt
+!best_*.pt
+
+# Large HDF5 datasets
+*.h5
+
+# ONNX models (keep for deployment)
+# *.onnx
+
+# MATLAB generated files
+*.asv
+*.m~
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Old files folder
+old/
+
+# Figures (can be regenerated)
+# figures/
