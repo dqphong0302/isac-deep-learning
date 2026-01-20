@@ -1,120 +1,88 @@
-# ISAC Deep Learning Channel Estimation
+# ISAC Deep Learning Channel Estimation (V3.6)
 
-Deep Learning approach for communication channel estimation in ISAC (Integrated Sensing and Communication) systems.
+Dự án sử dụng Deep Learning để ước lượng kênh truyền thông trong hệ thống ISAC (Integrated Sensing and Communication) theo cơ chế **Semi-Blind One-Pass**.
 
-## 🎯 Results
+**Phiên bản tốt nhất:** `V3.6 Optimized Results`
+- **Method:** 4 Pilots + Ridge LS + Residual MLP
+- **Test NMSE:** -40.95 dB (+36.12 dB vs GSFDIC)
 
-| Method | NMSE | Error | Speed |
-|--------|------|-------|-------|
-| GSFDIC fb=4 (baseline) | -6.12 dB | 24.46% | 4 iterations |
-| **Deep Learning** | **-50.05 dB** | **0.0025%** | **1-pass** |
+## 1. Yêu cầu Hệ Thống
 
-**Improvement: ~10,000x more accurate**
-
-## 📁 Project Structure
-
-```
-├── generate_dataset_hcom_1d_fixed_phase.m   # Dataset generation (MATLAB)
-├── training_hcom1d_residual_clean_win_optimized.py  # Model training (Python)
-├── export_onnx_hcom1d_smallfeat.py          # ONNX export
-├── compare_dl_vs_gsfdic_accurate.m          # Comparison script (MATLAB)
-├── onnx_inference_helper.py                 # MATLAB-Python bridge
-├── best_hcom1d_fixed.pt                     # Trained model
-├── hcom1d_fixed.onnx                        # ONNX model
-├── REPORT_ISAC_DL.md                        # Detailed report
-├── figures/                                  # Result plots
-├── useful_function/                          # MATLAB helper functions
-└── goc/                                      # Original baseline code
-```
-
-## 🚀 Hướng Dẫn Chạy Code
-
-### Bước 1: Cài đặt môi trường
-
-**Python (Anaconda):**
+### Environment
+Sử dụng Anaconda để quản lý môi trường:
 ```bash
-conda create -n ai_env python=3.10
+conda create -n ai_env python=3.9
 conda activate ai_env
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-pip install h5py onnx onnxruntime
+pip install numpy torch scipy matplotlib h5py onnxruntime
 ```
-
-**MATLAB:**
-- Yêu cầu: R2023a trở lên
-- Toolboxes: Communications, Signal Processing
-
-### Bước 2: Tạo Dataset (MATLAB)
-
-Mở MATLAB, chạy:
-```matlab
-cd e:\isac
-addpath('./useful_function/')
-generate_dataset_hcom_1d_fixed_phase
-```
-→ Tạo file `dataset_hcom_1d_fixed_phase.h5` (~25MB, 2000 samples)
-
-### Bước 3: Train Model (Python)
-
-Mở terminal/PowerShell:
-```bash
-cd e:\isac
-conda activate ai_env
-python training_hcom1d_residual_clean_win_optimized.py ^
-    --h5 dataset_hcom_1d_fixed_phase.h5 ^
-    --epochs 100 ^
-    --batch 64 ^
-    --lr 2e-3 ^
-    --device cuda ^
-    --ckpt best_hcom1d_fixed.pt
-```
-→ Tạo file `best_hcom1d_fixed.pt` (model đã train)
-
-### Bước 4: Export ONNX (Python)
-
-```bash
-python export_onnx_hcom1d_smallfeat.py ^
-    --ckpt best_hcom1d_fixed.pt ^
-    --out hcom1d_fixed.onnx ^
-    --opset 17
-```
-→ Tạo file `hcom1d_fixed.onnx` (model cho MATLAB)
-
-### Bước 5: So sánh kết quả (MATLAB)
-
-```matlab
-compare_dl_vs_gsfdic_accurate
-```
-→ Hiển thị bảng so sánh và tạo 5 đồ thị trong thư mục `figures/`
-
-### Bước 6: Xem báo cáo
-
-Mở file `REPORT_ISAC_DL.md` để xem kết quả chi tiết.
-
-## 📊 Key Features
-
-- **ResidualMLP Architecture**: 3 layers, 256 width, ~760K parameters
-- **Residual Learning**: `h_pred = h_ls + Δh`
-- **210 Input Features**: Band statistics + global stats + LS estimate
-- **NMSE Loss**: Normalized for fair comparison across power levels
-
-## 🔧 Requirements
-
-### Python
-- PyTorch >= 2.0
-- h5py
-- onnx, onnxruntime
 
 ### MATLAB
-- R2023a or later (for ONNX opset 17)
-- Communications Toolbox
-- Signal Processing Toolbox
+- Cần MATLAB R2023a trở lên (để chạy các script generate data và comparison).
+- Cần cài đặt **Communications Toolbox** và **Phased Array System Toolbox** (tuỳ chọn).
 
-## 📝 License
+## 2. Hướng Dẫn Chạy (Step-by-Step)
 
-MIT License
+### Bước 1: Tạo Dataset (MATLAB)
+Mở MATLAB, trỏ đến thư mục dự án và chạy:
+```matlab
+generate_dataset_v36_optimized
+```
+*Script sẽ tạo ra file `dataset_v36_optimized.h5` (~160MB).*
 
-## 📚 References
+### Bước 2: Training (Python)
+Chạy script training để huấn luyện mô hình:
+```bash
+conda run -n ai_env python training_v36_optimized.py --epochs 100
+```
+*Kết quả:*
+- `best_v36_opt.pt`: PyTorch checkpoint tốt nhất.
+- `figures_v36/`: Các biểu đồ training loss/NMSE.
 
-- Original baseline: `goc/ISAC_anh_Phong.m`
-- Channel model: ITU-R M.1225 (Indoor Office)
-- PDP: [0, -9.7, -19.2, -22.8] dB
+### Bước 3: Export ONNX (Python)
+Chuyển đổi model sang ONNX để dùng trong MATLAB:
+```bash
+conda run -n ai_env python export_onnx_v2.py
+```
+*Output:* `v36_opt.onnx`
+
+### Bước 4: Kiểm thử và So sánh (MATLAB)
+Chạy script so sánh Monte Carlo (100 trials):
+```matlab
+compare_v36_simple
+```
+*Script sẽ so sánh V3.6 với GSFDIC 4-vòng lặp và in ra kết quả NMSE.*
+
+## 3. Cấu Trúc Dự Án
+
+```
+isac/
+├── compare_v36_simple.m            # Script kiểm thử và so sánh chính
+├── generate_dataset_v36_optimized.m # Script tạo dữ liệu train/val
+├── training_v36_optimized.py       # Script training (PyTorch)
+├── export_onnx_v2.py               # Script export ONNX
+├── onnx_inference_helper.py        # Helper gọi Python từ MATLAB
+├── useful_function/                # Các hàm phụ trợ MATLAB (fdic, etc.)
+├── report_v3.html                  # Báo cáo chi tiết (HTML)
+└── report_v3.pdf                   # Báo cáo chi tiết (PDF)
+```
+
+## 4. Kết Quả Mong Đợi
+
+Khi chạy `compare_v36_simple`, kết quả sẽ tương tự:
+```
+=== V3.6 Optimized vs GSFDIC Comparison ===
+Trials: 100, Pilots: 4
+
+...
+
+=== Results (100 trials) ===
+GSFDIC mean:      -4.83 dB
+V3.6 DL mean:     -40.95 dB
+Improvement:      +36.12 dB
+Win rate:         100.00 %
+```
+
+## 5. Lưu ý
+- Nếu gặp lỗi Python trong MATLAB, hãy kiểm tra lại `pyenv` trong MATLAB để trỏ 
+đúng đến env `ai_env`.
+- File `.h5` và `.pt` lớn sẽ bị git ignore. Chỉ cần chạy lại Bước 1 & 2 để tái tạo.
