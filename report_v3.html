@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo ISAC Deep Learning - V3.6 Final</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #334155;
+      --code-bg: #0f172a;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: #fff;
+      margin-top: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      background: linear-gradient(to right, var(--primary-light), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: var(--bg);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: rgba(79, 70, 229, 0.1);
+      color: var(--primary-light);
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-card {
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--success);
+      margin: 0.5rem 0;
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--primary-light);
+    }
+
+    pre {
+      background-color: var(--code-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+
+    .result-good {
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .result-bad {
+      color: var(--danger);
+      font-weight: bold;
+    }
+
+    .formula {
+      font-family: 'Times New Roman', serif;
+      font-style: italic;
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    ul,
+    ol {
+      margin-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Báo Cáo Tổng Hợp: ISAC Deep Learning</h1>
+    <div class="subtitle">Phiên bản Final V3.6 Optimized | Cập nhật: 20/01/2026</div>
+
+    <h2>1. Tổng Quan & Kết Quả</h2>
+    <div class="card">
+      <p>Dự án phát triển mô hình <strong>Deep Learning (Semi-Blind)</strong> để ước lượng kênh truyền thông trong hệ
+        thống ISAC, thay thế cho thuật toán GSFDIC truyền thống.</p>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">Test NMSE</div>
+          <div class="metric-value">-40.95 dB</div>
+          <div class="badge badge-success">Excellent</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Improvement</div>
+          <div class="metric-value">+36.12 dB</div>
+          <div class="metric-label">vs GSFDIC</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pilots</div>
+          <div class="metric-value">4</div>
+          <div class="metric-label">0.78% Overhead</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Speed</div>
+          <div class="metric-value">~1 ms</div>
+          <div class="metric-label">One-pass</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>2. Phương Pháp Tối Ưu: Residual Learning</h2>
+    <div class="card">
+      <h3>Chiến lược "Residual Ridge-MLP"</h3>
+      <div class="formula">
+        h<sub>final</sub> = h<sub>LS</sub>(Ridge) + Δh<sub>Neural</sub>
+      </div>
+
+      <table>
+        <tr>
+          <th style="width: 30%">Thành phần</th>
+          <th>Vai trò</th>
+        </tr>
+        <tr>
+          <td><strong>1. Ridge LS (Anchor)</strong></td>
+          <td>Cung cấp ước lượng thô từ 4 pilots. Giải quyết vấn đề "phase ambiguity" mà Blind method gặp phải. Ridge
+            Regularization (λ=0.1) giúp ổn định khi pilot ít.</td>
+        </tr>
+        <tr>
+          <td><strong>2. Neural Network (Refiner)</strong></td>
+          <td>Sử dụng thông tin từ toàn bộ phổ (Spectral Features) để tinh chỉnh sai số (Residual), loại bỏ nhiễu SI và
+            interference.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h2>3. Các Thí Nghiệm & Kết Quả Chi Tiết</h2>
+    <div class="card">
+      <h3>So sánh trên Test Set (100 Monte Carlo Trials)</h3>
+      <table>
+        <tr>
+          <th>Phương pháp</th>
+          <th>NMSE (dB)</th>
+          <th>Improvement</th>
+          <th>Nhận xét</th>
+        </tr>
+        <tr>
+          <td>GSFDIC (Baseline)</td>
+          <td class="result-bad">-4.83 dB</td>
+          <td>-</td>
+          <td>Truyền thống, hiệu quả thấp với ít pilot.</td>
+        </tr>
+        <tr>
+          <td>Ridge LS Only</td>
+          <td class="result-good">-40.92 dB</td>
+          <td>+36.09 dB</td>
+          <td>Hiệu quả bất ngờ nhờ Regularization tốt.</td>
+        </tr>
+        <tr style="background: rgba(16, 185, 129, 0.1);">
+          <td><strong>V3.6 Optimized</strong></td>
+          <td class="result-good">-40.95 dB</td>
+          <td><strong>+36.12 dB</strong></td>
+          <td><span class="badge badge-success">BEST Accuracy</span></td>
+        </tr>
+        <tr>
+          <td>V7 Hybrid (CNN)</td>
+          <td>-40.19 dB</td>
+          <td>+35.36 dB</td>
+          <td>Phức tạp hơn nhưng hiệu quả kém hơn.</td>
+        </tr>
+      </table>
+
+      <div
+        style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--warning);">
+        <strong>💡 Key Insight:</strong> Neural Network chỉ cải thiện khoảng <strong>0.03 dB</strong> so với Ridge LS
+        thuần túy. Điều này cho thấy thuật toán LS cổ điển (khi được tối ưu hóa tốt) đã đạt gần tới giới hạn lý thuyết
+        (CRLB) cho bài toán này. Deep Learning đóng vai trò "fine-tuning" nhỏ.
+      </div>
+    </div>
+
+    <h2>4. Lịch Sử Phát Triển</h2>
+    <div class="card">
+      <table>
+        <tr>
+          <th>Version</th>
+          <th>Đặc điểm</th>
+          <th>NMSE</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td>V1</td>
+          <td>Fixed Phase</td>
+          <td>-55 dB</td>
+          <td><span class="badge badge-warning">Baseline</span></td>
+        </tr>
+        <tr>
+          <td>V2</td>
+          <td>Random Phase, 8 Pilots</td>
+          <td>-43.77 dB</td>
+          <td><span class="badge badge-success">Good</span></td>
+        </tr>
+        <tr>
+          <td>V3</td>
+          <td>Truly Blind (0 Pilot)</td>
+          <td>0 dB</td>
+          <td><span class="badge badge-danger">Failed</span></td>
+        </tr>
+        <tr style="background: rgba(16, 185, 129, 0.1);">
+          <td><strong>V3.6</strong></td>
+          <td><strong>4 Pilots, Ridge LS</strong></td>
+          <td><strong>-40.95 dB</strong></td>
+          <td><span class="badge badge-success">Selected</span></td>
+        </tr>
+        <tr>
+          <td>V3.7</td>
+          <td>Larger Model</td>
+          <td>-40.47 dB</td>
+          <td>Overfit</td>
+        </tr>
+        <tr>
+          <td>V3.8</td>
+          <td>Transformer</td>
+          <td>-40.47 dB</td>
+          <td>Complex</td>
+        </tr>
+        <tr>
+          <td>V7</td>
+          <td>Hybrid CNN</td>
+          <td>-40.19 dB</td>
+          <td>Noisy</td>
+        </tr>
+      </table>
+    </div>
+
+    <h2>5. Kết Luận</h2>
+    <div class="card">
+      <ul style="list-style-type: none; padding: 0;">
+        <li style="margin-bottom: 1rem;">
+          ✅ <strong>V3.6 là giải pháp tối ưu:</strong> Cân bằng tốt nhất giữa độ chính xác, độ phức tạp và tài nguyên
+          pilot.
+        </li>
+        <li style="margin-bottom: 1rem;">
+          ❌ <strong>Truly Blind là bất khả thi:</strong> Cần ít nhất một lượng nhỏ pilot để làm tham chiếu pha.
+        </li>
+        <li style="margin-bottom: 1rem;">
+          ⚠️ <strong>Phức tạp không bằng Hiệu quả:</strong> Các mô hình lớn (Transformer, CNN) không vượt qua được MLP
+          đơn giản kết hợp với kiến thức miền (Domain Knowledge - Ridge LS).
+        </li>
+      </ul>
+    </div>
+
+    <footer style="text-align: center; margin-top: 3rem; color: var(--text-muted); font-size: 0.9rem;">
+      <p>Generated on 20/01/2026 | ISAC Deep Learning Project</p>
+    </footer>
+  </div>
+</body>
+
+</html>

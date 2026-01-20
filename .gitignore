@@ -34,3 +34,8 @@ old/
 
 # Figures (can be regenerated)
 # figures/
+
+# Temporary files
+TEMP/
+tex2pdf*/
+
