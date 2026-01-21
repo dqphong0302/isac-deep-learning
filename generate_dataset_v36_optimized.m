@@ -33,7 +33,7 @@ k = n';
 DFT_matrix = 1/sqrt(Nc) * exp(-2i * pi * k * n / Nc);
 
 %% Dataset config
-numSamples  = 5000;
+numSamples  = 20000;  % Increased for better generalization
 hcom_length = 4;
 
 % Feature config

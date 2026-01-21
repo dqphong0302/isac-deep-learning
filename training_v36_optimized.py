@@ -147,7 +147,10 @@ def main():
         sys.exit(1)
         
     ds = OptimizedDataset(args.h5)
-    train_ds, val_ds = random_split(ds, [4000, 1000], generator=torch.Generator().manual_seed(42))
+    n_samples = len(ds)
+    n_train = int(0.8 * n_samples)
+    n_val = n_samples - n_train
+    train_ds, val_ds = random_split(ds, [n_train, n_val], generator=torch.Generator().manual_seed(42))
     train_loader = DataLoader(train_ds, batch_size=args.batch, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=args.batch, shuffle=False)
     
